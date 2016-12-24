@@ -14,12 +14,17 @@ type RpcResponse struct {
 	Data    string `json:"data"`
 }
 
+func PrefixedName(deviceName string, prefix string) string {
+	return prefix + deviceName
+}
+
 func Send(w http.ResponseWriter, r *http.Request, ps httprouter.Params, hc *HomeAutoClaims) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if r.Method == "OPTIONS" {
 		fmt.Println("OPT")
 		return
 	}
+
 	mqtt.SendMessage(ps.ByName("deviceName"), ps.ByName("funcName"))
 	c := make(chan string)
 	end := make(chan string)
