@@ -19,17 +19,17 @@ func PrefixedName(deviceName string, prefix string) string {
 }
 
 func Send(w http.ResponseWriter, r *http.Request, ps httprouter.Params, hc *HomeAutoClaims) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if r.Method == "OPTIONS" {
 		fmt.Println("OPT")
 		return
 	}
+	prefixedName := PrefixedName(ps.ByName("deviceName"), hc.Prefix)
 
-	mqtt.SendMessage(ps.ByName("deviceName"), ps.ByName("funcName"))
+	mqtt.SendMessage(prefixedName, ps.ByName("funcName"))
 	c := make(chan string)
 	end := make(chan string)
 
-	mqtt.Register(ps.ByName("deviceName")+"/device", func(topic string, payload string) {
+	mqtt.Register(prefixedName+"/device", func(topic string, payload string) {
 		res := &RpcResponse{
 			Success: true,
 			Data:    payload,
@@ -38,10 +38,13 @@ func Send(w http.ResponseWriter, r *http.Request, ps httprouter.Params, hc *Home
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintf(w, string(resBytes))
 		c <- "done"
+
 	})
 	time.AfterFunc(2*time.Second, func() {
+		sendErrorResponse(w, "ERROR, no response from device", 504)
 		fmt.Fprintf(w, "ERROR")
 		end <- "done"
+
 	})
 	select {
 	case <-c:
@@ -49,5 +52,6 @@ func Send(w http.ResponseWriter, r *http.Request, ps httprouter.Params, hc *Home
 	case <-end:
 		return
 	}
-
+	close(c)
+	close(end)
 }

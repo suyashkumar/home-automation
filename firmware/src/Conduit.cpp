@@ -20,11 +20,19 @@ typedef struct node {
 
 node_t* root;
 node_t* current;
+char prefixed_name[35];
 
-Conduit::Conduit(const char* name, const char* server){
+Conduit::Conduit(const char* name, const char* server, const char* prefix){
   // Set name and server
   this->_name = name;
-  this->_mqtt_server = server;
+  this->_mqtt_server = server; 
+  this->_prefix = prefix;
+
+  // Compute _prefixed_name
+  strcpy(prefixed_name, prefix);
+  strcat(prefixed_name, name);
+  const char* full_prefixed_name = prefixed_name;
+  this->_prefixed_name = full_prefixed_name; 
 
   // Init linked list
   root = (node_t *)malloc(sizeof(node_t));
@@ -87,16 +95,17 @@ void Conduit::reconnect() {
   while (!this->_client->connected()) {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
-    if (this->_client->connect(this->_name)) {
+	Serial.println(this->_prefixed_name);
+    if (this->_client->connect(this->_prefixed_name)) {
       Serial.println("connected");
       // Once connected, publish an announcement...
       this->_client->publish("outTopic", "hello world");
       // Suscribe to topics:
-      this->_client->subscribe(this->_name); // suscribe to events meant for this device
+      this->_client->subscribe(this->_prefixed_name); // suscribe to events meant for this device
     } else {
       Serial.print("failed, rc=");
       Serial.print(this->_client->state());
-      Serial.println(" try again in 5 seconds");
+      Serial.println(" try again in 5 seconds"); 
       // Wait 5 seconds before retrying
       delay(5000);
     }
@@ -105,7 +114,7 @@ void Conduit::reconnect() {
 
 void Conduit::publishMessage(const char* message){
   char str[20];
-  strcpy(str, this->_name);
+  strcpy(str, this->_prefixed_name);
   strcat(str, "/device");
   const char* topicName = str;
   this->_client->publish(topicName, message);
@@ -113,7 +122,7 @@ void Conduit::publishMessage(const char* message){
 
 void Conduit::publishData(const char* message, const char* dataStream) { 
 	char topicBuffer[20];
-	strcpy(topicBuffer, this->_name);
+	strcpy(topicBuffer, this->_prefixed_name);
 	strcat(topicBuffer, "/stream/");
 	strcat(topicBuffer, dataStream);
 	const char* topicName = topicBuffer;
