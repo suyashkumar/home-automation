@@ -18,6 +18,7 @@ func main() {
 	router.GET("/api/me", routes.AuthMiddlewareGenerator(routes.GetUser))
 	router.GET("/", routes.Hello)
 	router.OPTIONS("/api/*sendPath", routes.Headers)
+	router.ServeFiles("/static/*filepath", http.Dir("public/static"))
 
 	mqtt.RunServer()
 	fmt.Printf("Web server to listen on port :%s", os.Getenv("PORT"))
