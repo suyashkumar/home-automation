@@ -5,6 +5,7 @@ import { Card, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox
 import Input from 'react-toolbox/lib/input';
 import constants from './constants';
 import './interact/interact.css';
+import './common.css';
 
 class Interact extends Component {
 
@@ -36,8 +37,8 @@ class Interact extends Component {
 
 	render() {
 		return (
-			<div className="interact">
-				<Card className="interact-container">
+			<div className="container">
+				<Card className="content">
 					<CardTitle title="Interact"/>
 					<div className="">
 						<p>

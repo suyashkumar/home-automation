@@ -29,7 +29,8 @@ const NavigationMenu = props => {
 					<ListItem 
 						caption="Your Account" 
 						leftIcon="account_box" 
-						className="material" />
+						className="material"
+						onClick={getNavigateAndCloseFunc('/#/account')} />
 					<ListItem 
 						caption="Login" 
 						leftIcon="trending_flat" 

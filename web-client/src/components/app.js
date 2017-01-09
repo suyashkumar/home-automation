@@ -3,6 +3,7 @@ import AppBar from 'react-toolbox/lib/app_bar';
 import 'react-toolbox/lib/commons.scss'; 
 import Test from '../containers/Test'; 
 import NavigationMenu from './app/navigation-menu';
+import './app/app.css';
 
 class App extends Component { 
 
@@ -16,7 +17,7 @@ class App extends Component {
 
   	render() {
     	return (
-      	<div className="App">
+      	<div> 
 	  		<AppBar 
 				title="Conduit" 
 				leftIcon="menu" 

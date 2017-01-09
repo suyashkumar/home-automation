@@ -24,12 +24,28 @@ class Login extends Component {
 		}).then(response => {
 			if(response.data.success) {
 				localStorage.setItem('jwtToken', response.data.token);
-				window.open('/#/', "_self");
+				window.open('/#/interact', "_self");
 			} else {
 				console.log('Error!');
 			}
+		}); 
+	}
+
+	handleRegister = () => {
+		axios.post(`${constants.serverUrl}/api/register`, {
+			email: this.state.email,
+			password: this.state.password
+		}).then(response => {
+			console.log(response);
+			this.handleLogin();
 		});
-	
+	}
+
+	//TODO (suyashkumar) improve this logic
+	handleKeyPress = e => {
+		if (e.key === 'Enter') {
+			this.handleLogin();
+		}
 	}
 	
 	render() {
@@ -49,11 +65,12 @@ class Login extends Component {
 							label="Password" 
 							name="password"
 							value={this.state.password}
-							onChange={this.handleChange.bind(this, 'password')}/>
+							onChange={this.handleChange.bind(this, 'password')}
+							onKeyPress={this.handleKeyPress}/>
 						<Button className="button" onClick={this.handleLogin} raised primary>
 							Login
 						</Button>
-						<Button className="button" raised>
+						<Button className="button" onClick={this.handleRegister} raised>
 							Register	
 						</Button>
 					</div>
