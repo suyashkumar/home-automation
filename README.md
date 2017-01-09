@@ -1,16 +1,30 @@
 # conduit
 
-[Still under development]
+Conduit allows you to quickly build cloud-connected hardware that you can control and communicate with from anywhere in the world. Conduit provides a RESTful API that allows you to easily call arbitrary functions (e.g. `int lightsOn()`) or to recieve/store data from the low-cost ESP8266 WiFi microcontroller. 
 
-Conduit allows you to quickly build cloud connected hardware that you can control using a secure RESTful API. The current firmware library runs on WIFI-enabled ESP8266 and Arduino compatible microcontrollers. 
+With Conduit you can:
 
-In a nutshell, conduit allows you to directly call arbitrary C functions on your firmware from anywhere in the world via a RESTful API. 
+- Dispatch ESP8266 firmware function calls on the target device via a RESTful API on the central conduit server (`GET https://conduit.suyash.io/api/send/:deviceName/:functionName`)
+- Publish arbitrary data from the ESP8266 device to the conduit server (`conduit.publishData("hello", "testStream")` in the firmware) 
+- Retreive previously published data via the simple RESTful API
+
+all with minimal boilerplate and minimal setup :).
+
+### Getting Started
+Controlling an LED from the Cloud takes less than 5 minutes with Conduit. 
+
+1. Create a conduit account at https://conduit.suyash.io/#/login
+2. Clone this repo and change into the conduit directory.
+
+  ```sh
+  git clone https://github.com/suyashkumar/conduit.git
+  cd conduit
+  ```
+3. Navigate into the firmware directory and open `src/main.ino`
 
 ### Sample Project
 [smart-lights](https://github.com/suyashkumar/smart-lights) is a sample project that uses this library to switch lights from the cloud. 
 ![](https://github.com/suyashkumar/smart-lights/blob/master/img/lightswitch.gif)
-
-Currently all firmware<-->server communication has been validated (see project above), but you currently must install an instance of the server yourself (I'll have an instance that takes new accounts up shortly :)). Contact me directly if you're interested or need help!
 
 ### Example (In progress)
 The basic functionality of this library is straightforward. Start with the provided platformio firmware template and just do the following: 
