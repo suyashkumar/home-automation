@@ -20,19 +20,20 @@ const NavigationMenu = props => {
 						caption="Home" 
 						leftIcon="home" 
 						className="material"
-						onClick={getNavigateAndCloseFunc('/#/')}/>
+						onClick={getNavigateAndCloseFunc('/#/')} />
 					<ListItem 
 						caption="Interact" 
 						leftIcon="settings_input_antenna" 
-						className="material"/>
+						className="material"
+						onClick={getNavigateAndCloseFunc('/#/interact')} />
 					<ListItem 
 						caption="Your Account" 
 						leftIcon="account_box" 
-						className="material"/>
+						className="material" />
 					<ListItem 
 						caption="Login" 
 						leftIcon="trending_flat" 
-						onClick={getNavigateAndCloseFunc('/#/login')}/>
+						onClick={getNavigateAndCloseFunc('/#/login')} />
 				</List>
 			</div>
 		</Drawer>

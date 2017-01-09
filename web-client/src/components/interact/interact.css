@@ -1,0 +1,32 @@
+.interact {
+	padding-left: 10px;
+	padding-right: 10px; 
+}
+.interact-container {
+	margin: auto;
+	margin-top: 20px;
+	max-width: 800px;
+	text-align: center; 
+	padding-left: 10px;
+	padding-right: 10px;
+} 
+.interact-container .form-input {
+	width: 45%;
+	margin-right: 5px;
+	margin-left: 5px;
+	display: inline-block;
+}
+.interact-container .button {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.response-area {
+	margin-top: 10px;
+	text-align: left;
+	padding: 10px;
+	background-color: #DEDEDE;
+	border-radius: 4px;
+}
+.response-content {
+	margin-top: 10px;
+}

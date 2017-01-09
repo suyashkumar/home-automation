@@ -3,9 +3,8 @@ import axios from '../axios-auth';
 import {Button} from 'react-toolbox/lib/button';
 import { Card, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card';
 import Input from 'react-toolbox/lib/input';
-import './login/login.css';
-
-const server = 'http://conduit.suyash.io';
+import constants from './constants';
+import './login/login.css'; 
 
 class Login extends Component {
 
@@ -19,7 +18,7 @@ class Login extends Component {
 	}
 
 	handleLogin = () => {
-		axios.post(`${server}/api/auth`, {
+		axios.post(`${constants.serverUrl}/api/auth`, {
 			email: this.state.email,
 			password: this.state.password
 		}).then(response => {
