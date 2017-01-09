@@ -40,7 +40,7 @@ Controlling an LED from the Cloud takes less than 5 minutes with Conduit.
   platformio run --target upload
   ```
   NOTE: to properly upload to an ESP8266 chip, you must have installed the ESP8266 drivers on your system already.
-6. You should be set! You can now go to the conduit interact view (https://conduit.suyash.io/#/interact) and type in your device name (that you chose in step 4) and `ledOn` as the function and hit "Go!" to see your LED on your device turn on :). 
+6. You should be set! You can now go to the conduit interact view (https://conduit.suyash.io/#/interact) and type in your device name (that you chose in step 4) and `ledToggle` as the function and hit "Go!" to see your LED on your device turn on :). 
 7. There's a lot more to explore--you can publish persisted data to conduit (to be retrieved later via API) and build your own applications around conduit using the secure JSON web token based API.
 
 ### Sample Project
