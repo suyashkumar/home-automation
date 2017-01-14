@@ -26,7 +26,7 @@ Conduit conduit(deviceName, serverUrl, apiKey); // init Conduit
 int ledStatus = 0;
 
 // Toggles an LED attached on the LED pin!
-void ledToggle(){
+int ledToggle(){
   digitalWrite(LED, (ledStatus) ? LOW : HIGH);
   ledStatus = (ledStatus) ? 0 : 1;
   Serial.println("Toggled");
@@ -35,7 +35,7 @@ void ledToggle(){
 
 // Publishes a message response to the server 
 // when this function is called
-void publishMessage(){
+int publishMessage(){
     conduit.publishMessage("hey there");
 }
 
@@ -43,7 +43,7 @@ void publishMessage(){
 // sends data to the "testing" datastream
 // to be persisted in a database on the server
 // sends a "Done" response when done
-void publishSomeData(){
+int publishSomeData(){
 	conduit.publishData("10", "testing");
 	conduit.publishMessage("Done");
 }

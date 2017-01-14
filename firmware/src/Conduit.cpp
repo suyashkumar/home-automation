@@ -17,11 +17,15 @@ device and decide what funciton to all is abstracted away entirely by this libra
 #define RECONNECT_DELAY_MS    5000
 #define CONNECT_DELAY_MS      500
 #define ROOT_NODE_NAME        "ROOT"
+
+// These values are required for interop with Conduit (conduit.suyash.io)!
+// DO NOT CHANGE THESE
 #define DEVICE_PATH_SUFFIX    "/device"
 #define STREAM_PATH_INFIX     "/stream/"
 #define DEFAULT_TOPIC_NAME    "outTopic"
 #define ON_CONNECT_MSG        "!connected"
-#define SERVER_DEFAULT_PORT   1883
+#define SERVER_DEFAULT_PORT   1883  
+
 #define STRCMP_SAME           0
 
 typedef struct node {
