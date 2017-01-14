@@ -15,7 +15,7 @@ device and decide what funciton to all is abstracted away entirely by this libra
 #include <WiFiClient.h>
 #include <ESP8266WiFi.h> 
 
-typedef int (*handler)();
+typedef void (*handler)();
 void removeSpace(char* s);
 
 

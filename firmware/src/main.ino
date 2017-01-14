@@ -10,10 +10,10 @@ device and decide what funciton to all is abstracted away entirely by this libra
 @author: Suyash Kumar <suyashkumar2003@gmail.com>
 */
 #include <Arduino.h> 
-#include <wifi_info.h> // You can include secret wifi info in a seperate file 
+// #include <wifi_info.h> // You can include secret wifi info in a seperate file 
 #include <Conduit.h>
 
-#define LED D0
+#define LED D1
 
 // Fill out the below Github folks:
 //const char* ssid = "mywifi";
@@ -26,7 +26,7 @@ Conduit conduit(deviceName, serverUrl, apiKey); // init Conduit
 int ledStatus = 0;
 
 // Toggles an LED attached on the LED pin!
-int ledToggle(){
+void ledToggle(){
   digitalWrite(LED, (ledStatus) ? LOW : HIGH);
   ledStatus = (ledStatus) ? 0 : 1;
   Serial.println("Toggled");
@@ -35,7 +35,7 @@ int ledToggle(){
 
 // Publishes a message response to the server 
 // when this function is called
-int publishMessage(){
+void publishMessage(){
     conduit.publishMessage("hey there");
 }
 
@@ -43,7 +43,7 @@ int publishMessage(){
 // sends data to the "testing" datastream
 // to be persisted in a database on the server
 // sends a "Done" response when done
-int publishSomeData(){
+void publishSomeData(){
 	conduit.publishData("10", "testing");
 	conduit.publishMessage("Done");
 }
