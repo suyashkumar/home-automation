@@ -13,7 +13,7 @@ device and decide what funciton to all is abstracted away entirely by this libra
 // #include <wifi_info.h> // You can include secret wifi info in a seperate file 
 #include <Conduit.h>
 
-#define LED D1
+#define LED D0
 
 // Fill out the below Github folks:
 //const char* ssid = "mywifi";
