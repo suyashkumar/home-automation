@@ -1,5 +1,4 @@
-language: go
-sudo: required
+language: go 
 
 go:
     - 1.7.x
@@ -7,8 +6,7 @@ go:
 before_install:
     - mkdir ./server/secrets
     - echo -e "package secrets\n\nconst SubSecret=\"aaa\"\nconst SECRET=\"aaaa\"\nconst DB_DIAL_URL=\"mongodb://localhost\"" > ./server/secrets/secret.go 
-    - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-    - sudo apt-get install nodejs
+    - npm -v
 
 install: 
     - go get ./server
