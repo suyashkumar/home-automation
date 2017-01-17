@@ -8,6 +8,7 @@ before_install:
     - echo -e "package secrets\n\nconst SubSecret=\"aaa\"\nconst SECRET=\"aaaa\"\nconst DB_DIAL_URL=\"mongodb://localhost\"" > ./server/secrets/secret.go 
     - npm install -g npm3
     - hash -r
+    - source ~/.bashrc
     - npm -v
 
 install: 
