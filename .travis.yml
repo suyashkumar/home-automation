@@ -6,23 +6,20 @@ go:
 addons:
     apt:
         packages:
-            - nodejs=6.0
+            - nodejs
             - cmake
 before_install:
     - mkdir ./server/secrets
     - echo -e "package secrets\n\nconst SubSecret=\"aaa\"\nconst SECRET=\"aaaa\"\nconst DB_DIAL_URL=\"mongodb://localhost\"" > ./server/secrets/secret.go 
     - npm install -g npm3
-    - npm cache clean -f
-    - hash -r
-    - source ~/.bashrc
+    - npm cache clean -f 
     - npm -v
 
 install: 
     - go get ./server
     - go get "github.com/stretchr/testify/assert"
     - cd ./web-client 
-    - npm install
-    - npm install
+    - npm install; npm install 
     - cd ..
 script: 
     - go test -v ./server/tests
