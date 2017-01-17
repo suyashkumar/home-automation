@@ -7,6 +7,7 @@ addons:
     apt:
         packages:
             - nodejs
+            - cmake
 before_install:
     - mkdir ./server/secrets
     - echo -e "package secrets\n\nconst SubSecret=\"aaa\"\nconst SECRET=\"aaaa\"\nconst DB_DIAL_URL=\"mongodb://localhost\"" > ./server/secrets/secret.go 
