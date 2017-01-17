@@ -12,8 +12,7 @@ before_install:
     - mkdir ./server/secrets
     - echo -e "package secrets\n\nconst SubSecret=\"aaa\"\nconst SECRET=\"aaaa\"\nconst DB_DIAL_URL=\"mongodb://localhost\"" > ./server/secrets/secret.go 
     - nvm install node 
-    - nvm use node
-    - npm install -g npm3
+    - nvm use node 
     - npm cache clean -f 
     - npm -v
 
@@ -21,8 +20,8 @@ install:
     - go get ./server
     - go get "github.com/stretchr/testify/assert"
     - cd ./web-client 
-    - /home/travis/.nvm/v0.10.36/bin/npm3 -v
-    - /home/travis/.nvm/v0.10.36/bin/npm3 install
+    - npm -v 
+    - npm install
     - cd ..
 script: 
     - go test -v ./server/tests
