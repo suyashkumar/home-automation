@@ -15,6 +15,7 @@ before_install:
     - nvm use node 
     - npm cache clean -f 
     - npm -v
+    - node -v
 
 install: 
     - go get ./server
