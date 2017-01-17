@@ -6,7 +6,7 @@ go:
 addons:
     apt:
         packages:
-            - nodejs
+            - nodejs=6.0
             - cmake
 before_install:
     - mkdir ./server/secrets
