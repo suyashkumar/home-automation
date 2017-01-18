@@ -46,6 +46,7 @@
     "react-dev-utils": "^0.4.0",
     "recursive-readdir": "2.1.0",
     "sass-loader": "^4.0.2",
+    "sinon": "^1.17.7",
     "strip-ansi": "3.0.1",
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
@@ -73,7 +74,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
-  "jest": { 
+  "jest": {
     "unmockedModulePathPatterns": [
       "node_modules/react/",
       "node_modules/enzyme/"
