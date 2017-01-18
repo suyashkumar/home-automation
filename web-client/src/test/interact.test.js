@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-addons-test-utils' 
+import ReactTestUtils from 'react-addons-test-utils'
 import axios from '../axios-auth';
 import Interact from '../components/interact'; 
 import sinon from 'sinon';
