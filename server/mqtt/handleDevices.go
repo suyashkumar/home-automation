@@ -17,13 +17,15 @@ func Register(name string, a func(string, string)) {
 	handlerMap[name] = a
 }
 
+var LOGGING = (os.ExpandEnv("LOGGING") != "")
+
 func onPublish(msg *message.PublishMessage) error {
+	if LOGGING {
+		fmt.Println("Topic:", string(msg.Topic()), "Payload:", string(msg.Payload()))
+	}
 
 	if val, ok := handlerMap[string(msg.Topic())]; ok {
 		val(string(msg.Topic()), string(msg.Payload()))
-		if os.ExpandEnv("LOGGING") != "" {
-			fmt.Println("Topic:", string(msg.Topic()), "Payload:", string(msg.Payload()))
-		}
 	}
 	// Look to see if the published message was a streaming data message
 	// If so, persist the contents to an appropiate db
@@ -66,22 +68,41 @@ func stayAlive(c *service.Client, KeepAlive int) {
 		})
 	}
 }
+
+func sendMessageComplete(msg, ack message.Message, err error) error{
+	if LOGGING {
+		fmt.Println("Sent message")
+	}
+	if err != nil {
+		fmt.Println("ERROR sending message")
+		fmt.Println(err.Error())
+		return err
+	}
+	return nil
+}
+
 func sendMessage(client *service.Client, device string, payload string) {
 	pubMsg := message.NewPublishMessage()
 	pubMsg.SetTopic([]byte(device))
 	pubMsg.SetPayload([]byte(payload))
-	client.Publish(pubMsg, nil)
+	err := client.Publish(pubMsg, sendMessageComplete)
+	if err != nil {
+		fmt.Println("ERROR " + err.Error())
+	}
 }
 
 func SendMessage(device string, payload string) {
+	if LOGGING {
+		fmt.Println("Trying to send message")
+		fmt.Println(mClient)
+	}
 	sendMessage(mClient, device, payload)
+	fmt.Println("after possible send")
 }
 
 func RunServer() {
 	fmt.Println("Starting up MQTT machinery...")
-	svr := &service.Server{
-		KeepAlive: 300,
-	}
+	svr := &service.Server{}
 	go svr.ListenAndServe("tcp://:1883")
 	time.Sleep(200 * time.Millisecond)
 	mClient = createServerClient()
