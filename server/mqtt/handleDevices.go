@@ -2,6 +2,7 @@ package mqtt
 
 import (
 	"fmt"
+	MQTT "github.com/eclipse/paho.mqtt.golang"
 	"github.com/surgemq/message"
 	"github.com/suyashkumar/conduit/server/secrets"
 	"github.com/suyashkumar/surgemq/service"
@@ -10,7 +11,7 @@ import (
 	"time"
 )
 
-var mClient *service.Client
+var phaoClient MQTT.Client
 var handlerMap = make(map[string]func(string, string))
 
 func Register(name string, a func(string, string)) {
@@ -19,7 +20,7 @@ func Register(name string, a func(string, string)) {
 
 var LOGGING = (os.ExpandEnv("LOGGING") != "")
 
-func onPublish(msg *message.PublishMessage) error {
+func onPublish(client MQTT.Client, msg MQTT.Message) {
 	if LOGGING {
 		fmt.Println("Topic:", string(msg.Topic()), "Payload:", string(msg.Payload()))
 	}
@@ -33,33 +34,23 @@ func onPublish(msg *message.PublishMessage) error {
 	if validDataStream.MatchString(string(msg.Topic())) {
 		go PersistMessage(string(msg.Payload()), string(msg.Topic()))
 	}
-	return nil
 }
-func createServerClient() *service.Client {
+func createServerClient() MQTT.Client {
 	service.AllowedMap[secrets.SubSecret] = 1
-	client := &service.Client{}
-	msg := message.NewConnectMessage()
-	msg.SetClientId([]byte(secrets.SubSecret))
-	KeepAlive := 40
-	msg.SetKeepAlive(uint16(KeepAlive))
-	msg.SetCleanSession(true)
-	msg.SetVersion(3)
-	if err := client.Connect("tcp://:1883", msg); err != nil {
-		fmt.Println("problem")
-		fmt.Println(err)
+
+	opts := MQTT.NewClientOptions().AddBroker("tcp://localhost:1883")
+	opts.SetClientID(secrets.SubSecret)
+
+	c := MQTT.NewClient(opts)
+	if token := c.Connect(); token.Wait() && token.Error() != nil {
+		panic(token.Error())
 	}
 
-	go stayAlive(client, KeepAlive)
-
-	submsg := message.NewSubscribeMessage()
-	submsg.AddTopic([]byte("#"), 0)
-	client.Subscribe(submsg, nil, onPublish)
-
-	pubMsg := message.NewPublishMessage()
-	pubMsg.SetTopic([]byte("suyash1"))
-	pubMsg.SetPayload(make([]byte, 10))
-	client.Publish(pubMsg, nil)
-	return client
+	if token := c.Subscribe("#", 0, onPublish); token.Wait() && token.Error() != nil {
+		fmt.Println(token.Error())
+		os.Exit(1)
+	}
+	return c
 }
 func stayAlive(c *service.Client, KeepAlive int) {
 	for _ = range time.Tick(time.Duration(KeepAlive) * time.Second) {
@@ -69,35 +60,13 @@ func stayAlive(c *service.Client, KeepAlive int) {
 	}
 }
 
-func sendMessageComplete(msg, ack message.Message, err error) error{
-	if LOGGING {
-		fmt.Println("Sent message")
-	}
-	if err != nil {
-		fmt.Println("ERROR sending message")
-		fmt.Println(err.Error())
-		return err
-	}
-	return nil
-}
-
-func sendMessage(client *service.Client, device string, payload string) {
-	pubMsg := message.NewPublishMessage()
-	pubMsg.SetTopic([]byte(device))
-	pubMsg.SetPayload([]byte(payload))
-	err := client.Publish(pubMsg, sendMessageComplete)
-	if err != nil {
-		fmt.Println("ERROR " + err.Error())
-	}
+func sendMessage(c MQTT.Client, device string, payload string) {
+	token := c.Publish(device, 0, false, payload)
+	token.Wait()
 }
 
 func SendMessage(device string, payload string) {
-	if LOGGING {
-		fmt.Println("Trying to send message")
-		fmt.Println(mClient)
-	}
-	sendMessage(mClient, device, payload)
-	fmt.Println("after possible send")
+	sendMessage(phaoClient, device, payload)
 }
 
 func RunServer() {
@@ -105,6 +74,6 @@ func RunServer() {
 	svr := &service.Server{}
 	go svr.ListenAndServe("tcp://:1883")
 	time.Sleep(200 * time.Millisecond)
-	mClient = createServerClient()
+	phaoClient = createServerClient()
 	fmt.Println("Started and listening")
 }
