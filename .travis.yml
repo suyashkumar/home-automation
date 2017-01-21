@@ -22,6 +22,9 @@ install:
     - cd ..
 script: 
     - go test -v ./server/tests
+    - cd server
+    - go build
+    - cd ..
     - cd ./web-client
     - npm run test 
     - cd ..
