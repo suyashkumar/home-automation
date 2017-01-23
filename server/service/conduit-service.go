@@ -10,7 +10,7 @@ import (
 )
 
 type ConduitService interface {
-	Start()
+	Run()
 }
 
 type ConduitServiceImpl struct {
@@ -18,7 +18,7 @@ type ConduitServiceImpl struct {
 	IsDev  bool
 }
 
-func (c *ConduitServiceImpl) Start() {
+func (c *ConduitServiceImpl) Run() {
 	c.attachRoutes()
 	mqtt.RunServer()
 	c.startWebServer()
