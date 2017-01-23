@@ -1,38 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"github.com/julienschmidt/httprouter"
-	"github.com/suyashkumar/conduit/server/mqtt"
-	"github.com/suyashkumar/conduit/server/routes"
-	"net/http"
-	"os"
+	"github.com/suyashkumar/conduit/server/service"
 )
 
-// Redirect to https://
-func redirectToHttps(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "https://conduit.suyash.io"+r.RequestURI, http.StatusMovedPermanently)
-}
-
 func main() {
-	router := httprouter.New()
-	router.GET("/api/send/:deviceName/:funcName", routes.AuthMiddlewareGenerator(routes.Send))
-	router.GET("/api/streams/:deviceName/:streamName", routes.AuthMiddlewareGenerator(routes.GetStreamedMessages))
-	router.POST("/api/auth", routes.Auth)
-	router.POST("/api/register", routes.New)
-	router.GET("/api/me", routes.AuthMiddlewareGenerator(routes.GetUser))
-	router.GET("/", routes.Hello)
-	router.OPTIONS("/api/*sendPath", routes.Headers)
-	router.ServeFiles("/static/*filepath", http.Dir("public/static"))
-
-	mqtt.RunServer()
-	fmt.Printf("Web server to listen on port :%s", os.Getenv("PORT"))
-	if os.Getenv("DEV") == "TRUE" {
-		err := http.ListenAndServe(":"+os.Getenv("PORT"), router)
-		panic(err)
-	} else {
-		go http.ListenAndServeTLS(":443", os.Getenv("CERT"), os.Getenv("PRIV_KEY"), router)
-		err := http.ListenAndServe(":"+os.Getenv("PORT"), http.HandlerFunc(redirectToHttps))
-		panic(err)
-	}
+	conduitService := service.NewConduitService() // Init a new conduit web service
+	conduitService.Run()                          // Run the conduit web service server
 }
