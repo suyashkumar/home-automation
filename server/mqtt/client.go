@@ -16,9 +16,9 @@ import (
 	"github.com/suyashkumar/surgemq/service"
 )
 
-var client ConduitMQTTClient // The global instance of the internal mqtt client
+var globalClient Client // The global instance of the internal mqtt globalClient
 
-type ConduitMQTTClient interface {
+type Client interface {
 	// SendMessage sends a message to a given device stream
 	SendMessage(string, string)
 	// Register registers a callback to fire on messages recieved on a given stream
@@ -27,23 +27,23 @@ type ConduitMQTTClient interface {
 	DeRegister(string) error
 }
 
-type conduitMQTTClient struct {
-	Client      MQTT.Client
+type client struct {
+	MQTT        MQTT.Client
 	CallbackMap map[string]func(string, string)
 }
 
-// Client returns pointer to current global instance of ConduitMQTTClient
-func Client() ConduitMQTTClient {
-	return client
+// GetClient returns pointer to current global instance of GetClient
+func GetClient() Client {
+	return globalClient
 }
 
 // Register registers a callback to fire on messages recieved on a given stream
-func (c *conduitMQTTClient) Register(name string, f func(string, string)) {
+func (c *client) Register(name string, f func(string, string)) {
 	c.CallbackMap[name] = f
 }
 
 // DeRegister removes a registered callback for a given device stream
-func (c *conduitMQTTClient) DeRegister(name string) error {
+func (c *client) DeRegister(name string) error {
 	_, ok := c.CallbackMap[name]
 	// Mostly just a sanity check for callers:
 	if !ok {
@@ -54,8 +54,8 @@ func (c *conduitMQTTClient) DeRegister(name string) error {
 }
 
 // SendMessage sends a message to a given device stream
-func (c *conduitMQTTClient) SendMessage(device string, payload string) {
-	token := c.Client.Publish(device, 0, false, payload)
+func (c *client) SendMessage(device string, payload string) {
+	token := c.MQTT.Publish(device, 0, false, payload)
 	token.Wait()
 }
 
@@ -97,22 +97,22 @@ func persistMessage(message string, topic string) {
 	}
 }
 
-func createServerClient() ConduitMQTTClient {
+func createServerClient() Client {
 	service.AllowedMap[secrets.SubSecret] = 1
 
 	opts := MQTT.NewClientOptions().AddBroker("tcp://localhost:1883")
 	opts.SetClientID(secrets.SubSecret)
 
-	c := conduitMQTTClient{
-		Client:      MQTT.NewClient(opts),
+	c := client{
+		MQTT:        MQTT.NewClient(opts),
 		CallbackMap: make(map[string]func(string, string)),
 	}
 
-	if token := c.Client.Connect(); token.Wait() && token.Error() != nil {
+	if token := c.MQTT.Connect(); token.Wait() && token.Error() != nil {
 		panic(token.Error())
 	}
 
-	if token := c.Client.Subscribe("#", 0, getPublishCallback(c.CallbackMap)); token.Wait() && token.Error() != nil {
+	if token := c.MQTT.Subscribe("#", 0, getPublishCallback(c.CallbackMap)); token.Wait() && token.Error() != nil {
 		fmt.Println(token.Error())
 		os.Exit(1)
 	}
@@ -120,8 +120,8 @@ func createServerClient() ConduitMQTTClient {
 	return &c
 }
 
-func stayAlive(c *service.Client, KeepAlive int) {
-	for _ = range time.Tick(time.Duration(KeepAlive) * time.Second) {
+func stayAlive(c *service.Client, keepAlive int) {
+	for _ = range time.Tick(time.Duration(keepAlive) * time.Second) {
 		c.Ping(func(msg, ack message.Message, err error) error {
 			return nil
 		})
@@ -138,6 +138,6 @@ func RunServer() {
 	svr := &service.Server{}
 	go svr.ListenAndServe("tcp://:1883")
 	time.Sleep(200 * time.Millisecond)
-	client = createServerClient()
+	globalClient = createServerClient()
 	fmt.Println("Started and listening")
 }

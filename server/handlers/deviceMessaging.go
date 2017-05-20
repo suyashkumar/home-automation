@@ -21,15 +21,15 @@ func PrefixedName(deviceName string, prefix string) string {
 	return prefix + deviceName
 }
 
-func Send(w http.ResponseWriter, r *http.Request, ps httprouter.Params, context *HandlerContext, hc *HomeAutoClaims) {
+func Send(w http.ResponseWriter, r *http.Request, ps httprouter.Params, context *Context, hc *HomeAutoClaims) {
 
 	prefixedName := PrefixedName(ps.ByName("deviceName"), hc.Prefix)
 
-	mqtt.Client().SendMessage(prefixedName, ps.ByName("funcName"))
+	mqtt.GetClient().SendMessage(prefixedName, ps.ByName("funcName"))
 
 	c := make(chan string)
 
-	mqtt.Client().Register(prefixedName+"/device", func(topic string, payload string) {
+	mqtt.GetClient().Register(prefixedName+"/device", func(topic string, payload string) {
 		defer func() {
 			if r := recover(); r != nil {
 				log.Println("Error in device response handler", r)
@@ -59,7 +59,7 @@ func Send(w http.ResponseWriter, r *http.Request, ps httprouter.Params, context 
 	}
 
 	// Cleanup:
-	err := mqtt.Client().DeRegister(prefixedName + "/device")
+	err := mqtt.GetClient().DeRegister(prefixedName + "/device")
 	if err != nil {
 		fmt.Println("Issues deregistering device message listener")
 	}

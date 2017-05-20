@@ -2,12 +2,12 @@ package tests
 
 import (
 	"encoding/json"
-	"fmt"
-	"github.com/stretchr/testify/assert"
-	"github.com/suyashkumar/conduit/server/handlers"
 	"net/http/httptest"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/suyashkumar/conduit/server/handlers"
 )
 
 func TestMain(m *testing.M) {
@@ -27,9 +27,8 @@ func TestGetUser(t *testing.T) {
 	sampleEmail := "test@suyash.io"
 	samplePrefix := "myPrefix"
 	hc := handlers.HomeAutoClaims{Email: sampleEmail, Prefix: samplePrefix}
-	context := handlers.HandlerContext{}
+	context := handlers.Context{}
 	handlers.GetUser(w, req, nil, &context, &hc)
-	fmt.Println(w.Body.String())
 	var user handlers.UserResponse
 	err := json.Unmarshal(w.Body.Bytes(), &user)
 	assert.Nil(t, err)

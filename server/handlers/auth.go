@@ -27,11 +27,6 @@ type HomeAutoClaims struct {
 	jwt.StandardClaims
 }
 
-type ErrorResponse struct {
-	Success bool   `json:"success"`
-	Error   string `json:"error"`
-}
-
 type TokenResponse struct {
 	Success bool   `json:"success"`
 	Token   string `json:"token"`
@@ -44,28 +39,9 @@ type UserResponse struct {
 	Key     string `json:"key"`
 }
 
-type HandlerContext struct {
-	DbSession *mgo.Session
-}
-
-type AuthHandler func(
-	http.ResponseWriter,
-	*http.Request,
-	httprouter.Params,
-	*HandlerContext,
-	*HomeAutoClaims,
-)
-
-type ConduitHandler func(
-	http.ResponseWriter,
-	*http.Request,
-	httprouter.Params,
-	*HandlerContext,
-)
-
 // Handler to create a new conduit user in the database, along with
 // a generated private Prefix
-func New(w http.ResponseWriter, r *http.Request, ps httprouter.Params, context *HandlerContext) {
+func New(w http.ResponseWriter, r *http.Request, ps httprouter.Params, context *Context) {
 	SetCorsHeaders(w)
 	u, err := decodeUserFromRequest(r)
 	if err != nil {
@@ -86,7 +62,7 @@ func New(w http.ResponseWriter, r *http.Request, ps httprouter.Params, context *
 
 // Handler to return user information stored inside a
 // JSON Web Token
-func GetUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, context *HandlerContext, hc *HomeAutoClaims) {
+func GetUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, context *Context, hc *HomeAutoClaims) {
 	u := UserResponse{
 		Success: true,
 		Message: "You're authenticated",
@@ -103,7 +79,7 @@ func GetUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, conte
 
 // Handler to authenticate users to conduit and issue them
 // a JSON Web Token if successful
-func Auth(w http.ResponseWriter, r *http.Request, ps httprouter.Params, context *HandlerContext) {
+func Auth(w http.ResponseWriter, r *http.Request, ps httprouter.Params, context *Context) {
 	SetCorsHeaders(w)
 	u, err := decodeUserFromRequest(r)
 	if err != nil {

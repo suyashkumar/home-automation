@@ -1,22 +1,20 @@
-package middleware
+package app
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/julienschmidt/httprouter"
 	"github.com/suyashkumar/conduit/server/handlers"
-	"net/http"
 )
 
-func ConduitMiddleware(next handlers.ConduitHandler, c *handlers.HandlerContext) httprouter.Handle {
-	middleware := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		next(w, r, ps, c)
+func injectContext(h handlers.Handler, ctx *handlers.Context) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		h(w, r, ps, ctx)
 	}
-
-	return middleware
 }
-
-func ConduitAuthMiddleware(next handlers.AuthHandler, c *handlers.HandlerContext) httprouter.Handle {
+func injectAuthMiddleware(next handlers.AuthHandler, c *handlers.Context) httprouter.Handle {
 
 	middleware := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		handlers.SetCorsHeaders(w)
@@ -43,4 +41,15 @@ func ConduitAuthMiddleware(next handlers.AuthHandler, c *handlers.HandlerContext
 
 	return middleware
 
+}
+
+func attachRoutes(r *httprouter.Router, ctx *handlers.Context) {
+	r.GET("/api/send/:deviceName/:funcName", injectAuthMiddleware(handlers.Send, ctx))
+	r.GET("/api/streams/:deviceName/:streamName", injectAuthMiddleware(handlers.GetStreamedMessages, ctx))
+	r.POST("/api/auth", injectContext(handlers.Auth, ctx))
+	r.POST("/api/register", injectContext(handlers.New, ctx))
+	r.GET("/api/me", injectAuthMiddleware(handlers.GetUser, ctx))
+	r.GET("/", handlers.Hello)
+	r.OPTIONS("/api/*sendPath", handlers.Headers)
+	r.ServeFiles("/static/*filepath", http.Dir("public/static"))
 }
