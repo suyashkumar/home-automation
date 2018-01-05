@@ -3,7 +3,7 @@
 
 [Conduit featured on Hackaday!](http://hackaday.com/2017/01/17/servo-controlled-iot-light-switches/)
 
-Conduit allows you to quickly build cloud-connected hardware that you can control and communicate with from anywhere in the world. Conduit provides a RESTful API that allows you to easily call arbitrary functions (e.g. `int lightsOn()`) or to recieve/store data from the [low-cost ESP8266 WiFi microcontroller](https://www.amazon.com/HiLetgo-Version-NodeMCU-Internet-Development/dp/B010O1G1ES/ref=sr_1_3?ie=UTF8&qid=1483953570&sr=8-3&keywords=nodemcu+esp8266).
+Conduit allows you to quickly build cloud-connected devices that you can control and communicate with from anywhere in the world. Conduit provides a secure RESTful API that allows you to easily call functions (e.g. `lightsOn()`) that exist in your microcontroller firmware. Conduit also provides a streamlined interface for recieving and making available data from your devices in real time. Conduit is entirely open source (firmware, backend web service, frontend) and currently works with the [low-cost ESP8266 WiFi microcontroller](https://www.amazon.com/HiLetgo-Version-NodeMCU-Internet-Development/dp/B010O1G1ES/ref=sr_1_3?ie=UTF8&qid=1483953570&sr=8-3&keywords=nodemcu+esp8266) or Arduino like microcontroller.
 
 Conduit is currently in active development, so please feel free to contact me with comments/questions and submit well-architected pull requests!
 
@@ -16,7 +16,7 @@ With Conduit you can currently:
 all with minimal boilerplate and minimal setup :).
 
 ### Getting Started
-Controlling an LED from the Cloud takes less than 5 minutes with Conduit. Please make sure you've installed the relevant drivers ([here](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx) if you're using the nodemcu ESP8266 chip linked above) and installed the [platformio](http://docs.platformio.org/en/latest/installation.html) build system (simply `brew install platformio` if you use it).
+Controlling an LED on the ESP8266 from the Cloud takes less than 5 minutes with Conduit. Please make sure you've installed the relevant drivers ([here](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx) if you're using the nodemcu ESP8266 chip linked above) and installed the [platformio](http://docs.platformio.org/en/latest/installation.html) build system (simply `brew install platformio` if you're on a mac).
 
 1. Create a conduit account at https://conduit.suyash.io/#/login
 2. Retreive your API key from the Account view at https://conduit.suyash.io/#/account
