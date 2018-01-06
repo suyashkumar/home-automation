@@ -33,7 +33,7 @@ void loop(void) {
 }
 ```
 
-...and just like that, you can now call `ledOn` on this device by making a `GET https://conduit.suyash.io/api/send/my-device-name/ledOn` from anywhere in the world! You will also have to supply a valid auth token by including an `x-access-token` header to ensure your call is authorized. 
+...and just like that, you can now call `ledOn` on this device by making a `GET https://conduit.suyash.io/api/send/my-device-name/ledOn` from anywhere in the world! You will also have to supply a valid auth token by including an `x-access-token` header to ensure your call is authorized, and have an associated valid Conduit account. 
 
 Conduit also provides a streamlined interface for recieving and making available arbitrary data produced from your devices in real time. 
 
