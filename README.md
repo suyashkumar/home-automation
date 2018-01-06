@@ -3,7 +3,7 @@
 
 [Conduit featured on Hackaday!](http://hackaday.com/2017/01/17/servo-controlled-iot-light-switches/)
 
-Conduit allows you to quickly build cloud-connected IoT devices that you can control and communicate with from anywhere in the world. Conduit provides a RESTful API that allows you to remotely call functions (e.g. `lightsOn()`) on your ESP8266 device from the cloud, even if it's behind a LAN and doesn't have a public IP address. You can do all this simply by dropping in a few lines of code into your firmware:
+Conduit allows you to quickly build cloud-connected IoT devices that you can control and communicate with from anywhere in the world. Conduit provides a RESTful API that allows you to remotely call functions (e.g. `lightsOn()`) on your ESP8266/Arduino device from the cloud, even if it's behind a LAN and doesn't have a public IP address. You can do all this simply by dropping in a few lines of code into your firmware:
 
 ```C
 #include <Arduino.h>
@@ -25,7 +25,7 @@ void setup(void) {
 
   conduit.startWIFI("ssid", "password"); // Config/start wifi
   conduit.init();
-  conduit.addHandler("ledOn", &ledOn); // Registers the ledOn function with the conduit service to be callable remotely
+  conduit.addHandler("ledOn", &ledOn); // Registers ledOn function to be callable remotely
 }
 
 void loop(void) {
