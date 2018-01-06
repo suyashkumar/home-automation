@@ -7,15 +7,7 @@ Conduit allows you to quickly build cloud-connected IoT devices that you can con
 
 Conduit is currently in active development, so please feel free to contact me with comments/questions and submit well-architected pull requests!
 
-With Conduit you can currently:
-
-- Dispatch ESP8266 firmware function calls on the target device via a RESTful API or the barebones Conduit UI
-- Publish arbitrary data from the ESP8266 device to the conduit server (`conduit.publishData("hello", "testStream")` in the firmware) 
-- Retreive previously published data via the simple RESTful API
-
-all with minimal boilerplate and minimal setup :).
-
-### Getting Started
+### Bink an LED from the Cloud
 Controlling an LED on the ESP8266 from the Cloud takes less than 5 minutes with Conduit. Please make sure you've installed the relevant drivers ([here](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx) if you're using the nodemcu ESP8266 chip linked above) and installed the [platformio](http://docs.platformio.org/en/latest/installation.html) build system (simply `brew install platformio` if you're on a mac).
 
 1. Create a conduit account at https://conduit.suyash.io/#/login
