@@ -1,32 +1,82 @@
 package db
 
 import (
+	"errors"
+
 	"github.com/jinzhu/gorm"
-	"github.com/suyashkumar/conduit/server/config"
-	"github.com/sirupsen/logrus"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	uuid "github.com/satori/go.uuid"
+	"github.com/suyashkumar/auth"
+	"github.com/suyashkumar/conduit/server/entities"
 )
 
 const DefaultMaxIdleConns = 5
 
-var db *gorm.DB
+var ErrorNoConnectionString = errors.New("A connection string must be specified on the first call to Get")
 
-func Get() (*gorm.DB, error) {
-	if db != nil {
-		return db, nil
+// DatabaseHandler abstracts away common persistence operations needed for this package
+type DatabaseHandler interface {
+	// GetUser gets a user from the database that matches constraints on the input user
+	GetUser(u auth.User) (auth.User, error)
+	// UpsertUser updates a user (if input user UUID matches one in the db) or inserts a user
+	UpsertUser(u auth.User) error
+	// GetDeviceSecret gets a user's device secret
+	GetDeviceSecret(uuid uuid.UUID) (entities.DeviceSecret, error)
+}
+
+type databaseHandler struct {
+	db            *gorm.DB
+	authDBHandler auth.DatabaseHandler
+}
+
+// NewDatabaseHandler initializes and returns a new DatabaseHandler
+func NewDatabaseHandler(dbConnection string) (DatabaseHandler, error) {
+	db, err := getDB(dbConnection)
+	if err != nil {
+		return nil, err
+	}
+	// AutoMigrate relevant schemas
+	db.AutoMigrate(&entities.DeviceSecret{})
+	ah, err := auth.NewDatabaseHandlerFromGORM(db)
+	if err != nil {
+		return nil, err
+	}
+	return &databaseHandler{
+		db:            db,
+		authDBHandler: ah,
+	}, nil
+}
+
+func (d *databaseHandler) GetUser(u auth.User) (auth.User, error) {
+	return d.authDBHandler.GetUser(u)
+}
+
+func (d *databaseHandler) UpsertUser(u auth.User) error {
+	return d.authDBHandler.UpsertUser(u)
+}
+
+func (d *databaseHandler) GetDeviceSecret(uuid uuid.UUID) (entities.DeviceSecret, error) {
+	var foundDeviceSecret entities.DeviceSecret
+	// this could return multiple, but convention right now is one secret per user. May change in future
+	err := d.db.Where(entities.DeviceSecret{UserUUID: uuid}).First(&foundDeviceSecret).Error
+	if err != nil {
+		return foundDeviceSecret, err
+	}
+	return foundDeviceSecret, nil
+}
+
+func getDB(dbConnection string) (*gorm.DB, error) {
+	if dbConnection == "" {
+		return nil, ErrorNoConnectionString
 	}
 
-	c := config.Get(config.DBConnString)
-	d, err := gorm.Open("postgres", c)
-
+	d, err := gorm.Open("postgres", dbConnection)
 	if err != nil {
-		logrus.WithField("DBConnString", c).Error("Unable to connect to database")
+		return nil, err
 	}
 
 	d.DB().SetMaxIdleConns(DefaultMaxIdleConns)
 
-	db = d
-
-	return db, nil
+	return d, nil
 
 }

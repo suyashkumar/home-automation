@@ -2,10 +2,10 @@
 
 
 [[projects]]
-  name = "github.com/go-sql-driver/mysql"
+  name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
-  revision = "a0583e0143b1624142adab07e0e97fe106d99561"
-  version = "v1.3"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
 
 [[projects]]
   name = "github.com/gorilla/websocket"
@@ -16,19 +16,12 @@
 [[projects]]
   branch = "master"
   name = "github.com/graarh/golang-socketio"
-  packages = [
-    ".",
-    "protocol",
-    "transport"
-  ]
+  packages = [".","protocol","transport"]
   revision = "2c44953b9b5fcd4da83ec8816f002ce68a12ef2d"
 
 [[projects]]
   name = "github.com/jinzhu/gorm"
-  packages = [
-    ".",
-    "dialects/mysql"
-  ]
+  packages = [".","dialects/postgres"]
   revision = "6ed508ec6a4ecb3531899a69cbc746ccf65a4166"
   version = "v1.9.1"
 
@@ -45,10 +38,22 @@
   version = "v1.1"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/lib/pq"
+  packages = [".","hstore","oid"]
+  revision = "88edab0803230a3898347e77b474f8c1820a1f20"
+
+[[projects]]
   name = "github.com/rifflock/lfshook"
   packages = ["."]
   revision = "bf539943797a1f34c1f502d07de419b5238ae6c6"
   version = "v2.3"
+
+[[projects]]
+  name = "github.com/satori/go.uuid"
+  packages = ["."]
+  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
+  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/sirupsen/logrus"
@@ -58,22 +63,25 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/suyashkumar/auth"
+  packages = ["."]
+  revision = "97e45181e2b5a4d20baa1e45d56e70bc23640481"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["ssh/terminal"]
+  packages = ["bcrypt","blowfish","ssh/terminal"]
   revision = "91a49db82a88618983a78a06c1cbd4e00ab749ab"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = [
-    "unix",
-    "windows"
-  ]
+  packages = ["unix","windows"]
   revision = "f6cff0780e542efa0c8e864dc8fa522808f6a598"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6c4523a7da5f7c03dcf3156f4f95ee27d66ec96574587decdc29bf9c609789e2"
+  inputs-digest = "3a1bfbbf316356e94c9ba09686199aae13508c9b351f5ee5e0a01dcc7cff7503"
   solver-name = "gps-cdcl"
   solver-version = 1
