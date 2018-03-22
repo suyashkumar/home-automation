@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/sirupsen/logrus"
+	"github.com/suyashkumar/auth"
 	"github.com/suyashkumar/conduit/server/config"
 	db2 "github.com/suyashkumar/conduit/server/db"
 	"github.com/suyashkumar/conduit/server/device"
@@ -17,10 +18,11 @@ func main() {
 
 	d := device.NewHandler()
 	db, err := db2.NewDatabaseHandler(config.Get(config.DBConnString))
+	a, err := auth.NewAuthenticatorFromGORM(db.GetDB(), []byte(config.Get(config.SigningKey)))
 	if err != nil {
 		logrus.WithError(err).Fatal("Could not connect to or init database")
 	}
-	r := routes.Build(d, db)
+	r := routes.Build(d, db, a)
 
 	p := fmt.Sprintf(":%s", config.Get(config.Port))
 

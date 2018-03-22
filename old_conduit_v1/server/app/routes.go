@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/julienschmidt/httprouter"
 	"github.com/suyashkumar/conduit/server/handlers"
 )
@@ -28,14 +27,14 @@ func injectAuthMiddleware(next handlers.AuthHandler, c *handlers.Context) httpro
 				next(w, r, ps, c, claims)
 				return
 			} else {
-				handlers.SendErrorResponse(w, err.Error(), 401)
+				handlers.sendErrorResponse(w, err.Error(), 401)
 				fmt.Println("Error in Auth middleware")
 				fmt.Println(err.Error())
 				return
 			}
 		}
 		// Either token wasn't valid or it wasn't provided
-		handlers.SendErrorResponse(w, "No Token", 400)
+		handlers.sendErrorResponse(w, "No Token", 400)
 		return
 	}
 

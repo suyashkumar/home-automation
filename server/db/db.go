@@ -22,6 +22,10 @@ type DatabaseHandler interface {
 	UpsertUser(u auth.User) error
 	// GetDeviceSecret gets a user's device secret
 	GetDeviceSecret(uuid uuid.UUID) (entities.DeviceSecret, error)
+	// InsertDeviceSecret updates or inserts a device secret for the User TODO: make this non-descructive in future
+	InsertDeviceSecret(uuid uuid.UUID, ds entities.DeviceSecret) error
+	// GetDB returns the DatabaseHandler's underlying *gorm.DB
+	GetDB() *gorm.DB
 }
 
 type databaseHandler struct {
@@ -58,11 +62,23 @@ func (d *databaseHandler) UpsertUser(u auth.User) error {
 func (d *databaseHandler) GetDeviceSecret(uuid uuid.UUID) (entities.DeviceSecret, error) {
 	var foundDeviceSecret entities.DeviceSecret
 	// this could return multiple, but convention right now is one secret per user. May change in future
-	err := d.db.Where(entities.DeviceSecret{UserUUID: uuid}).First(&foundDeviceSecret).Error
+	err := d.db.Where(entities.DeviceSecret{UserUUID: uuid}).Order("created_at desc").First(&foundDeviceSecret).Error
 	if err != nil {
 		return foundDeviceSecret, err
 	}
 	return foundDeviceSecret, nil
+}
+
+func (d *databaseHandler) InsertDeviceSecret(uuid uuid.UUID, secret entities.DeviceSecret) error {
+	err := d.db.Create(&secret).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *databaseHandler) GetDB() *gorm.DB {
+	return d.db
 }
 
 func getDB(dbConnection string) (*gorm.DB, error) {

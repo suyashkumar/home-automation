@@ -16,12 +16,19 @@
 [[projects]]
   branch = "master"
   name = "github.com/graarh/golang-socketio"
-  packages = [".","protocol","transport"]
+  packages = [
+    ".",
+    "protocol",
+    "transport"
+  ]
   revision = "2c44953b9b5fcd4da83ec8816f002ce68a12ef2d"
 
 [[projects]]
   name = "github.com/jinzhu/gorm"
-  packages = [".","dialects/postgres"]
+  packages = [
+    ".",
+    "dialects/postgres"
+  ]
   revision = "6ed508ec6a4ecb3531899a69cbc746ccf65a4166"
   version = "v1.9.1"
 
@@ -29,7 +36,7 @@
   branch = "master"
   name = "github.com/jinzhu/inflection"
   packages = ["."]
-  revision = "1c35d901db3da928c72a72d8458480cc9ade058f"
+  revision = "04140366298a54a039076d798123ffa108fff46c"
 
 [[projects]]
   name = "github.com/julienschmidt/httprouter"
@@ -40,8 +47,12 @@
 [[projects]]
   branch = "master"
   name = "github.com/lib/pq"
-  packages = [".","hstore","oid"]
-  revision = "88edab0803230a3898347e77b474f8c1820a1f20"
+  packages = [
+    ".",
+    "hstore",
+    "oid"
+  ]
+  revision = "b2004221932bd6b13167ef654c81cffac36f7537"
 
 [[projects]]
   name = "github.com/rifflock/lfshook"
@@ -58,26 +69,33 @@
 [[projects]]
   name = "github.com/sirupsen/logrus"
   packages = ["."]
-  revision = "d682213848ed68c0a260ca37d6dd5ace8423f5ba"
-  version = "v1.0.4"
+  revision = "c155da19408a8799da419ed3eeb0cb5db0ad5dbc"
+  version = "v1.0.5"
 
 [[projects]]
   branch = "master"
   name = "github.com/suyashkumar/auth"
   packages = ["."]
-  revision = "97e45181e2b5a4d20baa1e45d56e70bc23640481"
+  revision = "46e30814f7bce8a70598f487d79367daab4e8ae8"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["bcrypt","blowfish","ssh/terminal"]
-  revision = "91a49db82a88618983a78a06c1cbd4e00ab749ab"
+  packages = [
+    "bcrypt",
+    "blowfish",
+    "ssh/terminal"
+  ]
+  revision = "80db560fac1fb3e6ac81dbc7f8ae4c061f5257bd"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = ["unix","windows"]
-  revision = "f6cff0780e542efa0c8e864dc8fa522808f6a598"
+  packages = [
+    "unix",
+    "windows"
+  ]
+  revision = "c488ab1dd8481ef762f96a79a9577c27825be697"
 
 [solve-meta]
   analyzer-name = "dep"
