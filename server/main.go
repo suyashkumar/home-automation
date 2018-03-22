@@ -6,6 +6,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/suyashkumar/conduit/server/config"
+	db2 "github.com/suyashkumar/conduit/server/db"
 	"github.com/suyashkumar/conduit/server/device"
 	"github.com/suyashkumar/conduit/server/log"
 	"github.com/suyashkumar/conduit/server/routes"
@@ -15,7 +16,11 @@ func main() {
 	log.Configure()
 
 	d := device.NewHandler()
-	r := routes.Build(d)
+	db, err := db2.NewDatabaseHandler(config.Get(config.DBConnString))
+	if err != nil {
+		logrus.WithError(err).Fatal("Could not connect to or init database")
+	}
+	r := routes.Build(d, db)
 
 	p := fmt.Sprintf(":%s", config.Get(config.Port))
 
