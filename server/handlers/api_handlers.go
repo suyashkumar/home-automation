@@ -13,6 +13,7 @@ import (
 	"github.com/suyashkumar/conduit/server/db"
 	"github.com/suyashkumar/conduit/server/device"
 	"github.com/suyashkumar/conduit/server/entities"
+	sec "github.com/suyashkumar/conduit/server/secret"
 )
 
 func Hello(
@@ -52,7 +53,7 @@ func Register(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d de
 	err = db.InsertDeviceSecret(u.UUID, entities.DeviceSecret{
 		UUID:     uuid.NewV4(),
 		UserUUID: u.UUID,
-		Secret:   "hello",
+		Secret:   sec.GetRandString(10),
 	})
 
 	if err != nil {
@@ -104,4 +105,39 @@ func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d devic
 
 	res := entities.LoginResponse{Token: token}
 	sendJSON(w, res, 200)
+}
+
+func Call(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d device.Handler, db db.DatabaseHandler, a auth.Authenticator) {
+	req := entities.CallRequest{}
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		logrus.WithError(err).Error("Could not parse CallRequest")
+		err := sendJSON(w, entities.ErrorResponse{Error: "Could not parse CallRequest"}, 400)
+		if err != nil {
+			logrus.WithError(err).Error("!!!! Could not send error JSON response (CallRequest)")
+		}
+		return
+	}
+
+	// Authenticate User
+	claims, err := a.Validate(req.Token)
+	if err == auth.ErrorValidatingToken {
+		logrus.WithField("token", req.Token).Info("Error validating token")
+		err := sendJSON(w, entities.ErrorResponse{Error: "Error validating token"}, 401)
+		if err != nil {
+			logrus.WithError(err).Error("!!!! Could not send error JSON response (CallRequest)")
+		}
+		return
+	}
+	if err != nil {
+		logrus.WithError(err).Error("Unknown error validating token")
+		err := sendJSON(w, entities.ErrorResponse{Error: "Error validating token"}, 500)
+		if err != nil {
+			logrus.WithError(err).Error("!!!! Could not send error JSON response (CallRequest)")
+		}
+		return
+	}
+
+	d.Call(req.DeviceName, claims.Data["deviceSecret"], req.FunctionName)
+	sendOK(w)
 }
