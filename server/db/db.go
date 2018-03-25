@@ -14,62 +14,62 @@ const DefaultMaxIdleConns = 5
 
 var ErrorNoConnectionString = errors.New("A connection string must be specified on the first call to Get")
 
-// DatabaseHandler abstracts away common persistence operations needed for this package
-type DatabaseHandler interface {
+// Handler abstracts away common persistence operations needed for this package
+type Handler interface {
 	// GetUser gets a user from the database that matches constraints on the input user
 	GetUser(u auth.User) (auth.User, error)
 	// UpsertUser updates a user (if input user UUID matches one in the db) or inserts a user
 	UpsertUser(u auth.User) error
-	// GetDeviceSecret gets a user's device secret
-	GetDeviceSecret(uuid uuid.UUID) (entities.DeviceSecret, error)
-	// InsertDeviceSecret updates or inserts a device secret for the User TODO: make this non-descructive in future
-	InsertDeviceSecret(uuid uuid.UUID, ds entities.DeviceSecret) error
-	// GetDB returns the DatabaseHandler's underlying *gorm.DB
+	// GetAccountSecret gets a user's device secret
+	GetAccountSecret(uuid uuid.UUID) (entities.AccountSecret, error)
+	// InsertAccountSecret updates or inserts a device secret for the User
+	InsertAccountSecret(uuid uuid.UUID, ds entities.AccountSecret) error
+	// GetDB returns the Handler's underlying *gorm.DB
 	GetDB() *gorm.DB
 }
 
-type databaseHandler struct {
+type handler struct {
 	db            *gorm.DB
 	authDBHandler auth.DatabaseHandler
 }
 
-// NewDatabaseHandler initializes and returns a new DatabaseHandler
-func NewDatabaseHandler(dbConnection string) (DatabaseHandler, error) {
+// NewHandler initializes and returns a new Handler
+func NewHandler(dbConnection string) (Handler, error) {
 	db, err := getDB(dbConnection)
 	if err != nil {
 		return nil, err
 	}
 	// AutoMigrate relevant schemas
-	db.AutoMigrate(&entities.DeviceSecret{})
+	db.AutoMigrate(&entities.AccountSecret{})
 	ah, err := auth.NewDatabaseHandlerFromGORM(db)
 	if err != nil {
 		return nil, err
 	}
-	return &databaseHandler{
+	return &handler{
 		db:            db,
 		authDBHandler: ah,
 	}, nil
 }
 
-func (d *databaseHandler) GetUser(u auth.User) (auth.User, error) {
+func (d *handler) GetUser(u auth.User) (auth.User, error) {
 	return d.authDBHandler.GetUser(u)
 }
 
-func (d *databaseHandler) UpsertUser(u auth.User) error {
+func (d *handler) UpsertUser(u auth.User) error {
 	return d.authDBHandler.UpsertUser(u)
 }
 
-func (d *databaseHandler) GetDeviceSecret(uuid uuid.UUID) (entities.DeviceSecret, error) {
-	var foundDeviceSecret entities.DeviceSecret
+func (d *handler) GetAccountSecret(uuid uuid.UUID) (entities.AccountSecret, error) {
+	var foundDeviceSecret entities.AccountSecret
 	// this could return multiple, but convention right now is one secret per user. May change in future
-	err := d.db.Where(entities.DeviceSecret{UserUUID: uuid}).Order("created_at desc").First(&foundDeviceSecret).Error
+	err := d.db.Where(entities.AccountSecret{UserUUID: uuid}).Order("created_at desc").First(&foundDeviceSecret).Error
 	if err != nil {
 		return foundDeviceSecret, err
 	}
 	return foundDeviceSecret, nil
 }
 
-func (d *databaseHandler) InsertDeviceSecret(uuid uuid.UUID, secret entities.DeviceSecret) error {
+func (d *handler) InsertAccountSecret(uuid uuid.UUID, secret entities.AccountSecret) error {
 	err := d.db.Create(&secret).Error
 	if err != nil {
 		return err
@@ -77,7 +77,7 @@ func (d *databaseHandler) InsertDeviceSecret(uuid uuid.UUID, secret entities.Dev
 	return nil
 }
 
-func (d *databaseHandler) GetDB() *gorm.DB {
+func (d *handler) GetDB() *gorm.DB {
 	return d.db
 }
 

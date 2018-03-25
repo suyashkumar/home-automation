@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"encoding/json"
@@ -16,19 +15,7 @@ import (
 	sec "github.com/suyashkumar/conduit/server/secret"
 )
 
-func Hello(
-	w http.ResponseWriter,
-	r *http.Request,
-	ps httprouter.Params,
-	d device.Handler,
-	db db.DatabaseHandler,
-	a auth.Authenticator) {
-
-	d.Call("suyash", "a", "ledToggle")
-	fmt.Fprintf(w, "Hello, world")
-}
-
-func Register(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d device.Handler, db db.DatabaseHandler, a auth.Authenticator) {
+func Register(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d device.Handler, db db.Handler, a auth.Authenticator) {
 	req := entities.RegisterRequest{}
 	err := json.NewDecoder(r.Body).Decode(&req)
 	// TODO: req validation
@@ -50,7 +37,7 @@ func Register(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d de
 
 	// Create and add user's initial device secret
 	logrus.Info(u.UUID)
-	err = db.InsertDeviceSecret(u.UUID, entities.DeviceSecret{
+	err = db.InsertDeviceSecret(u.UUID, entities.AccountSecret{
 		UUID:     uuid.NewV4(),
 		UserUUID: u.UUID,
 		Secret:   sec.GetRandString(10),
@@ -63,7 +50,7 @@ func Register(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d de
 	sendOK(w)
 }
 
-func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d device.Handler, db db.DatabaseHandler, a auth.Authenticator) {
+func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d device.Handler, db db.Handler, a auth.Authenticator) {
 	req := entities.LoginRequest{}
 	err := json.NewDecoder(r.Body).Decode(&req)
 	// TODO: req validation
@@ -87,7 +74,7 @@ func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d devic
 		return
 	}
 
-	// Get user's DeviceSecret to embed into Token
+	// Get user's AccountSecret to embed into Token
 	secret, err := db.GetDeviceSecret(user.UUID)
 	if err != nil {
 		logrus.WithError(err).WithField("user_uuid", user.UUID).Error("Issue fetching device secret")
@@ -107,7 +94,7 @@ func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d devic
 	sendJSON(w, res, 200)
 }
 
-func Call(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d device.Handler, db db.DatabaseHandler, a auth.Authenticator) {
+func Call(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d device.Handler, db db.Handler, a auth.Authenticator) {
 	req := entities.CallRequest{}
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
