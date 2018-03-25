@@ -37,7 +37,7 @@ func Register(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d de
 
 	// Create and add user's initial device secret
 	logrus.Info(u.UUID)
-	err = db.InsertDeviceSecret(u.UUID, entities.AccountSecret{
+	err = db.InsertAccountSecret(u.UUID, entities.AccountSecret{
 		UUID:     uuid.NewV4(),
 		UserUUID: u.UUID,
 		Secret:   sec.GetRandString(10),
@@ -75,7 +75,7 @@ func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d devic
 	}
 
 	// Get user's AccountSecret to embed into Token
-	secret, err := db.GetDeviceSecret(user.UUID)
+	secret, err := db.GetAccountSecret(user.UUID)
 	if err != nil {
 		logrus.WithError(err).WithField("user_uuid", user.UUID).Error("Issue fetching device secret")
 	}
@@ -83,7 +83,7 @@ func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d devic
 	// Get Token for user
 	token, err := a.GetToken(req.Email, req.Password, &auth.GetTokenOpts{
 		RequestedPermissions: auth.PERMISSIONS_USER,
-		Data:                 auth.TokenData{"deviceSecret": secret.Secret},
+		Data:                 auth.TokenData{"accountSecret": secret.Secret},
 	})
 
 	if err != nil {
@@ -125,6 +125,6 @@ func Call(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d device
 		return
 	}
 
-	d.Call(req.DeviceName, claims.Data["deviceSecret"], req.FunctionName)
+	d.Call(req.DeviceName, claims.Data["accountSecret"], req.FunctionName)
 	sendOK(w)
 }
