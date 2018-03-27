@@ -1,4 +1,4 @@
-BINARY = go-starter
+BINARY = conduit
 
 .PHONY: build
 build:
