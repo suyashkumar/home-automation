@@ -18,6 +18,9 @@ func main() {
 
 	d := device.NewHandler()
 	db, err := db2.NewHandler(config.Get(config.DBConnString))
+	if err != nil {
+		logrus.WithError(err).WithField("DBConnString", config.Get(config.DBConnString)).Fatal("Could not connect to DB")
+	}
 	a, err := auth.NewAuthenticatorFromGORM(db.GetDB(), []byte(config.Get(config.SigningKey)))
 	if err != nil {
 		logrus.WithError(err).Fatal("Could not connect to or init database")
