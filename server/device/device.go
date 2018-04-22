@@ -5,12 +5,14 @@ import (
 
 	"fmt"
 
-	"github.com/graarh/golang-socketio"
-	"github.com/graarh/golang-socketio/transport"
+	"github.com/satori/go.uuid"
+	"github.com/sirupsen/logrus"
+	"github.com/suyashkumar/golang-socketio"
+	"github.com/suyashkumar/golang-socketio/transport"
 )
 
 type Handler interface {
-	Call(deviceName, deviceID, functionName string)
+	Call(deviceName, deviceID, functionName string, wait bool) chan string
 	On(deviceName, deviceID, eventName string, callback func(deviceName, eventName, body string))
 	GetHTTPHandler() http.Handler
 }
@@ -39,8 +41,18 @@ func getRoomName(deviceName, deviceID string) string {
 	return fmt.Sprintf("%s_%s", deviceID, deviceName)
 }
 
-func (h *handler) Call(deviceName, deviceID, functionName string) {
-	h.server.BroadcastTo(getRoomName(deviceName, deviceID), "server_directives", functionName)
+func (h *handler) Call(deviceName, deviceID, functionName string, wait bool) chan string {
+	reqUUID := uuid.NewV4().String()
+	message := fmt.Sprintf("%s,%s", functionName, reqUUID)
+	c := make(chan string)
+	logrus.WithField("request_uuid", reqUUID).Info("Setting up event listener")
+	h.server.On(reqUUID, func(ch *gosocketio.Channel, msg string) string {
+		logrus.WithField("request_uuid", reqUUID).Info("Response returned")
+		c <- msg
+		return "OK"
+	})
+	h.server.BroadcastTo(getRoomName(deviceName, deviceID), "server_directives", message)
+	return c
 }
 
 func (h *handler) On(deviceName, deviceID, eventName string, callback func(deviceName, eventName, body string)) {

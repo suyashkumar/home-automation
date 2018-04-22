@@ -14,16 +14,6 @@
   version = "v1.2.0"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/graarh/golang-socketio"
-  packages = [
-    ".",
-    "protocol",
-    "transport"
-  ]
-  revision = "2c44953b9b5fcd4da83ec8816f002ce68a12ef2d"
-
-[[projects]]
   name = "github.com/jinzhu/gorm"
   packages = [
     ".",
@@ -52,7 +42,7 @@
     "hstore",
     "oid"
   ]
-  revision = "b2004221932bd6b13167ef654c81cffac36f7537"
+  revision = "d34b9ff171c21ad295489235aec8b6626023cd04"
 
 [[projects]]
   name = "github.com/rifflock/lfshook"
@@ -80,13 +70,23 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/suyashkumar/golang-socketio"
+  packages = [
+    ".",
+    "protocol",
+    "transport"
+  ]
+  revision = "d319f78bb742e7375eef96a20a99bcdfff0c922d"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/crypto"
   packages = [
     "bcrypt",
     "blowfish",
     "ssh/terminal"
   ]
-  revision = "80db560fac1fb3e6ac81dbc7f8ae4c061f5257bd"
+  revision = "e73bf333ef8920dbb52ad18d4bd38ad9d9bc76d7"
 
 [[projects]]
   branch = "master"
@@ -95,11 +95,11 @@
     "unix",
     "windows"
   ]
-  revision = "c488ab1dd8481ef762f96a79a9577c27825be697"
+  revision = "79b0c6888797020a994db17c8510466c72fe75d9"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3a1bfbbf316356e94c9ba09686199aae13508c9b351f5ee5e0a01dcc7cff7503"
+  inputs-digest = "8c8dfdebe20182cf02adfce986f28815a4bc07b24aa395e449a5d880fee1e411"
   solver-name = "gps-cdcl"
   solver-version = 1

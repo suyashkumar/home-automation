@@ -5,6 +5,8 @@ import (
 
 	"encoding/json"
 
+	"time"
+
 	"github.com/julienschmidt/httprouter"
 	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
@@ -125,6 +127,24 @@ func Call(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d device
 		return
 	}
 
-	d.Call(req.DeviceName, claims.Data["accountSecret"], req.FunctionName)
-	sendOK(w)
+	c := d.Call(req.DeviceName, claims.Data["accountSecret"], req.FunctionName, req.WaitForDeviceResponse)
+
+	if req.WaitForDeviceResponse {
+		select {
+		case res := <-c:
+			logrus.WithField("response", res).Infof("Device responded")
+			r := entities.SendResponse{
+				Response: res,
+			}
+			sendJSON(w, r, 200)
+		case <-time.After(3 * time.Second):
+			logrus.Warn("Timed out waiting for device response")
+			e := entities.ErrorResponse{
+				Error: "Timed out while waiting for the device to respond",
+			}
+			sendJSON(w, e, 500)
+		}
+	} else {
+		sendOK(w)
+	}
 }

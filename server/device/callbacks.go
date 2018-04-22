@@ -1,8 +1,8 @@
 package device
 
 import (
-	"github.com/graarh/golang-socketio"
 	"github.com/sirupsen/logrus"
+	"github.com/suyashkumar/golang-socketio"
 )
 
 const OK_MSG = "OK"

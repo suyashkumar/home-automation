@@ -12,3 +12,7 @@ type ErrorResponse struct {
 type LoginResponse struct {
 	Token string `json:"token"`
 }
+
+type SendResponse struct {
+	Response string `json:"response"`
+}

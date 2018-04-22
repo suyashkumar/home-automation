@@ -11,7 +11,8 @@ type LoginRequest struct {
 }
 
 type CallRequest struct {
-	Token        string `json:"token"`
-	DeviceName   string `json:"device_name"`
-	FunctionName string `json:"function_name"`
+	Token                 string `json:"token"`
+	DeviceName            string `json:"device_name"`
+	FunctionName          string `json:"function_name"`
+	WaitForDeviceResponse bool   `json:"wait_for_device_response"`
 }
