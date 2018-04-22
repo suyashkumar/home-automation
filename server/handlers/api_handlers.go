@@ -132,7 +132,7 @@ func Call(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d device
 	if req.WaitForDeviceResponse {
 		select {
 		case res := <-c:
-			logrus.WithField("response", res).Infof("Device responded")
+			logrus.WithField("response", res).Info("Device responded")
 			r := entities.SendResponse{
 				Response: res,
 			}
