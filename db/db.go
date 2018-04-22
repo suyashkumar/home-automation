@@ -7,7 +7,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	uuid "github.com/satori/go.uuid"
 	"github.com/suyashkumar/auth"
-	"github.com/suyashkumar/conduit/server/entities"
+	"github.com/suyashkumar/conduit/entities"
 )
 
 const DefaultMaxIdleConns = 5

@@ -6,11 +6,11 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/suyashkumar/auth"
-	"github.com/suyashkumar/conduit/server/config"
-	db2 "github.com/suyashkumar/conduit/server/db"
-	"github.com/suyashkumar/conduit/server/device"
-	"github.com/suyashkumar/conduit/server/log"
-	"github.com/suyashkumar/conduit/server/routes"
+	"github.com/suyashkumar/conduit/config"
+	db2 "github.com/suyashkumar/conduit/db"
+	"github.com/suyashkumar/conduit/device"
+	"github.com/suyashkumar/conduit/log"
+	"github.com/suyashkumar/conduit/routes"
 )
 
 func main() {

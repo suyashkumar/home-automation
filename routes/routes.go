@@ -5,9 +5,9 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/suyashkumar/auth"
-	"github.com/suyashkumar/conduit/server/db"
-	"github.com/suyashkumar/conduit/server/device"
-	"github.com/suyashkumar/conduit/server/handlers"
+	"github.com/suyashkumar/conduit/db"
+	"github.com/suyashkumar/conduit/device"
+	"github.com/suyashkumar/conduit/handlers"
 )
 
 type deviceAPIHandler func(

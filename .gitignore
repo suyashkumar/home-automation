@@ -1,7 +1,11 @@
 .pioenvs
 .clang_complete
 .gcc-flags.json
-server/secret.js
 *.swp
-go-server/src/routes/secret.go
-go-server/src/mqtt/secret.go
+vendor/
+go-starter
+.idea/
+logs.txt
+postgres_data
+conduit
+

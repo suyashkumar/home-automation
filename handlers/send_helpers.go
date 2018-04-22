@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/suyashkumar/conduit/server/entities"
+	"github.com/suyashkumar/conduit/entities"
 )
 
 func sendOK(w http.ResponseWriter) {

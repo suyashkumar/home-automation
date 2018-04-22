@@ -1,7 +1,0 @@
-*.swp
-vendor/
-go-starter
-.idea/
-logs.txt
-postgres_data
-conduit

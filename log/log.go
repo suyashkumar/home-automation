@@ -3,7 +3,7 @@ package log
 import (
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
-	"github.com/suyashkumar/conduit/server/config"
+	"github.com/suyashkumar/conduit/config"
 )
 
 // Configure logging for this project

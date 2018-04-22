@@ -11,10 +11,10 @@ import (
 	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"github.com/suyashkumar/auth"
-	"github.com/suyashkumar/conduit/server/db"
-	"github.com/suyashkumar/conduit/server/device"
-	"github.com/suyashkumar/conduit/server/entities"
-	sec "github.com/suyashkumar/conduit/server/secret"
+	"github.com/suyashkumar/conduit/db"
+	"github.com/suyashkumar/conduit/device"
+	"github.com/suyashkumar/conduit/entities"
+	sec "github.com/suyashkumar/conduit/secret"
 )
 
 func Register(w http.ResponseWriter, r *http.Request, ps httprouter.Params, d device.Handler, db db.Handler, a auth.Authenticator) {
