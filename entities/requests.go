@@ -16,3 +16,7 @@ type CallRequest struct {
 	FunctionName          string `json:"function_name"`
 	WaitForDeviceResponse bool   `json:"wait_for_device_response"`
 }
+
+type UserInfoRequest struct {
+	Token string `json:"token"`
+}

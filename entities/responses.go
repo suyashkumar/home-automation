@@ -16,3 +16,7 @@ type LoginResponse struct {
 type SendResponse struct {
 	Response string `json:"response"`
 }
+
+type UserInfoResponse struct {
+	AccountSecret string `json:"account_secret"`
+}

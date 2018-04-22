@@ -37,6 +37,7 @@ func Build(d device.Handler, db db.Handler, a auth.Authenticator) *httprouter.Ro
 	r.POST("/api/register", injectMiddleware(handlers.Register, d, db, a))
 	r.POST("/api/login", injectMiddleware(handlers.Login, d, db, a))
 	r.POST("/api/call", injectMiddleware(handlers.Call, d, db, a))
+	r.POST("/api/user_info", injectMiddleware(handlers.UserInfo, d, db, a))
 
 	// Configure static file serving from /static
 	r.ServeFiles("/static/*filepath", http.Dir("public/static"))
