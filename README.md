@@ -5,7 +5,7 @@
 
 [Conduit featured on Hackaday!](http://hackaday.com/2017/01/17/servo-controlled-iot-light-switches/)
 
-Conduit is an open-source secure web service that allows you to quickly and easily call functions on your ESP8266 IoT devices from anywhere in the world (even if those devices are behind private networks). 
+Conduit is an entirely open-source web service that allows you to quickly and easily call functions on your [ESP8266 IoT devices](https://www.amazon.com/HiLetgo-Version-NodeMCU-Internet-Development/dp/B010O1G1ES/ref=sr_1_3?ie=UTF8&qid=1483953570&sr=8-3&keywords=nodemcu+esp8266) from anywhere in the world (even if those devices are behind private networks). 
 
 You can do all this simply by dropping in a few lines of code into your firmware and then issuing RESTful API requests to the conduit web service to call your firmware functions. Suppose I wanted to toggle an LED on my ESP8266 in Florida from an iPhone app in North Carolina:
 
@@ -55,11 +55,14 @@ and now you can call `ledToggle` on that device from anywhere in the world with:
     }
     ```
 
-Conduit is **entirely open source** (the firmware, backend web service, and frontend), allowing you to deploy your own instance of Conduit behind protected networks (like hospitals) or to audit the Conduit code. Conduit currently works with the [low-cost ESP8266 WiFi microcontroller](https://www.amazon.com/HiLetgo-Version-NodeMCU-Internet-Development/dp/B010O1G1ES/ref=sr_1_3?ie=UTF8&qid=1483953570&sr=8-3&keywords=nodemcu+esp8266) or Arduino like microcontroller, but there is no reason why it can't also work on other systems.
-
 Conduit is currently in active development, so please feel free to contact me with comments/questions and submit pull requests!
 
-### Bink an LED from the Cloud
+## Conduit Components
+* [Conduit backend web service (here)](https://github.com/suyashkumar/conduit)
+* [Conduit firmware library](https://github.com/suyashkumar/conduit-firmware-library)
+* [Conduit frontend](https://github.com/suyashkumar/conduit-frontend)
+
+## Bink an LED from the Cloud
 Controlling an LED on the ESP8266 from the Cloud takes less than 5 minutes with Conduit. Please make sure you've installed the relevant drivers ([here](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx) if you're using the nodemcu ESP8266 chip linked above) and installed the [platformio](http://docs.platformio.org/en/latest/installation.html) build system (simply `brew install platformio` if you're on a mac).
 
 1. Create a conduit account at https://conduit.suyash.io/#/login
