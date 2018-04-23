@@ -5,7 +5,7 @@
 
 [Conduit featured on Hackaday!](http://hackaday.com/2017/01/17/servo-controlled-iot-light-switches/)
 
-Conduit is an open-source secure web service that allows you to quickly and easily call functionality on your ESP8266 IoT devices from anywhere in the world (even if those devices are behind private networks). 
+Conduit is an open-source secure web service that allows you to quickly and easily call functions on your ESP8266 IoT devices from anywhere in the world (even if those devices are behind private networks). 
 
 You can do all this simply by dropping in a few lines of code into your firmware and then issuing RESTful API requests to the conduit web service to call your firmware functions. Suppose I wanted to toggle an LED on my ESP8266 in Florida from an iPhone app in North Carolina:
 
