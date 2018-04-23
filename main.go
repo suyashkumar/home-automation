@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
 	"github.com/suyashkumar/auth"
 	"github.com/suyashkumar/conduit/config"
@@ -26,12 +27,13 @@ func main() {
 		logrus.WithError(err).Fatal("Could not connect to or init database")
 	}
 	r := routes.Build(d, db, a)
+	handler := cors.Default().Handler(r)
 
 	p := fmt.Sprintf(":%s", config.Get(config.Port))
 
 	if config.Get(config.UseSSL) == "false" {
 		logrus.WithField("port", p).Info("Serving without SSL")
-		err := http.ListenAndServe(p, r)
+		err := http.ListenAndServe(p, handler)
 		logrus.Fatal(err)
 	} else {
 		logrus.Info("Serving with SSL")
@@ -39,7 +41,7 @@ func main() {
 			p,
 			config.Get(config.CertKey),
 			config.Get(config.PrivKey),
-			r,
+			handler,
 		)
 		// TODO: reroute http requests to https
 		logrus.Fatal(err)
