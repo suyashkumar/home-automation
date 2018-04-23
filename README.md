@@ -7,8 +7,21 @@
 
 Conduit is an entirely open-source web service that allows you to quickly and easily call functions on your [ESP8266 IoT devices](https://www.amazon.com/HiLetgo-Version-NodeMCU-Internet-Development/dp/B010O1G1ES/ref=sr_1_3?ie=UTF8&qid=1483953570&sr=8-3&keywords=nodemcu+esp8266) from anywhere in the world (even if those devices are behind private networks). 
 
-You can do all this simply by dropping in a few lines of code into your firmware and then issuing RESTful API requests to the conduit web service to call your firmware functions. Suppose I wanted to toggle an LED on my ESP8266 in Florida from an iPhone app in North Carolina:
+You can do all this simply by dropping in a few lines of code into your firmware and then issuing RESTful API requests to the conduit web service to call your firmware functions. 
 
+## Conduit Components
+* [Conduit backend web service (here)](https://github.com/suyashkumar/conduit)
+* [Conduit firmware library](https://github.com/suyashkumar/conduit-firmware-library)
+* [Conduit frontend](https://github.com/suyashkumar/conduit-frontend)
+
+## Conduit API
+A central conduit API server is already deployed at https://api.conduit.suyash.io (should be used for all API routes) with a user-friendly front-end deployed at https://conduit.suyash.io. 
+
+| Method | Route          | Sample Request                                                                                                                           | Notes                                                                                                                     |
+|--------|----------------|------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| POST   | /api/login     | ``` {   "email": "test@test.com",   "password": "test" }  ```                                                                            | Authenticate with Conduit, get issued a JWT                                                                               |
+| POST   | /api/send      | ```{"token": "JWT token from login", "device_name": "myDeviceName", "function_name": "ledToggle", "wait_for_device_response": "true"}``` | Call a function (ledToggle) on one of your ESP8266 devices (named "myDeviceName" here)!                                   |
+| POST   | /api/user_info | ```{"token": "JWT token from login"}```                                                                                                  | This returns information about your user account, including your account  secret which you must include in your firmware. |
 ```C
 #include <Arduino.h> 
 #include <Conduit.h>
@@ -56,11 +69,6 @@ and now you can call `ledToggle` on that device from anywhere in the world with:
     ```
 
 Conduit is currently in active development, so please feel free to contact me with comments/questions and submit pull requests!
-
-## Conduit Components
-* [Conduit backend web service (here)](https://github.com/suyashkumar/conduit)
-* [Conduit firmware library](https://github.com/suyashkumar/conduit-firmware-library)
-* [Conduit frontend](https://github.com/suyashkumar/conduit-frontend)
 
 ## Bink an LED from the Cloud
 Controlling an LED on the ESP8266 from the Cloud takes less than 5 minutes with Conduit. Please make sure you've installed the relevant drivers ([here](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx) if you're using the nodemcu ESP8266 chip linked above) and installed the [platformio](http://docs.platformio.org/en/latest/installation.html) build system (simply `brew install platformio` if you're on a mac).
