@@ -1,43 +1,59 @@
 # conduit
-:eyes:NOTE: conduit is going through a ground-up re-write on the [conduit-v2-master](https://github.com/suyashkumar/conduit/tree/conduit-v2-master) branch! :eyes:
+:eyes:Conduit V2 was just realeased! :eyes:
 
 <a href="https://travis-ci.org/suyashkumar/conduit" target="_blank"><img src="https://travis-ci.org/suyashkumar/conduit.svg?branch=master" /></a>
 
 [Conduit featured on Hackaday!](http://hackaday.com/2017/01/17/servo-controlled-iot-light-switches/)
 
-Conduit allows you to quickly build cloud-connected IoT devices that you can communicate with and control from anywhere in the world. Conduit provides a RESTful API that allows you to remotely call functions (e.g. `lightsOn()`) on your ESP8266/Arduino device from the cloud, even if it's behind a LAN and doesn't have a public IP address. You can do all this simply by dropping in a few lines of code into your firmware:
+Conduit is an open-source secure web service that allows you to quickly and easily call functionality on your ESP8266 IoT devices from anywhere in the world (even if those devices are behind private networks). 
+
+You can do all this simply by dropping in a few lines of code into your firmware and then issuing RESTful API requests to the conduit web service to call your firmware functions. Suppose I wanted to toggle an LED on my ESP8266 in Florida from an iPhone app in North Carolina:
 
 ```C
-#include <Arduino.h>
+#include <Arduino.h> 
 #include <Conduit.h>
 
 #define LED D0
 
-Conduit conduit("my-device-name", "conduit.suyash.io", "api-key-here"); // init Conduit
+const char* ssid = "ssid";
+const char* password = "password";
 
-// Turns on a LED
-int ledOn() {
-  digitalWrite(LED, HIGH);
-  conduit.publishMessage("LED ON");
+Conduit conduit("myDeviceName", "api.conduit.suyash.io", "my-conduit-account-secret");
+int ledStatus = 0;
+
+int ledToggle(RequestParams *rq){
+  digitalWrite(LED, (ledStatus) ? HIGH : LOW); // LED is on when LOW
+  ledStatus = (ledStatus) ? 0 : 1;
+  conduit.sendResponse(rq, (ledStatus) ? "ON":"OFF"); // send response to conduit
 }
 
-void setup(void) {
+
+void setup(void){
+  Serial.begin(115200); // Start serial
   pinMode(LED, OUTPUT); // Set LED pin to output
-  digitalWrite(LED, LOW); // Start out with LED off
+  digitalWrite(LED, HIGH);
 
-  conduit.startWIFI("ssid", "password"); // Config/start wifi
+  conduit.startWIFI(ssid, password); // Config/start wifi
   conduit.init();
-  conduit.addHandler("ledOn", &ledOn); // Registers ledOn function to be callable remotely
+  conduit.addHandler("ledToggle", &ledToggle); // register ledToggle as "ledToggle" with Conduit
+
 }
 
-void loop(void) {
+void loop(void){
   conduit.handle();
 }
 ```
 
-...and just like that, you can now call `ledOn` on this device by making a `GET https://conduit.suyash.io/api/send/my-device-name/ledOn` from anywhere in the world! You will also have to supply a valid auth token by including an `x-access-token` header to ensure your call is authorized, and have an associated valid Conduit account. 
-
-Conduit also provides a streamlined interface for recieving and making available arbitrary data produced from your devices in real time. 
+and now you can call `ledToggle` on that device from anywhere in the world with:
+  * POST https://api.conduit.suyash.io/api/send with the following JSON body:
+    ```json
+    {
+      "token": "<your_jwt_token_here>",
+      "device_name": "myDeviceName", 
+      "function_name": "ledToggle",
+      "wait_for_device_response": "true"
+    }
+    ```
 
 Conduit is **entirely open source** (the firmware, backend web service, and frontend), allowing you to deploy your own instance of Conduit behind protected networks (like hospitals) or to audit the Conduit code. Conduit currently works with the [low-cost ESP8266 WiFi microcontroller](https://www.amazon.com/HiLetgo-Version-NodeMCU-Internet-Development/dp/B010O1G1ES/ref=sr_1_3?ie=UTF8&qid=1483953570&sr=8-3&keywords=nodemcu+esp8266) or Arduino like microcontroller, but there is no reason why it can't also work on other systems.
 
@@ -82,6 +98,6 @@ Controlling an LED on the ESP8266 from the Cloud takes less than 5 minutes with 
 ![](https://github.com/suyashkumar/smart-lights/blob/master/img/lightswitch.gif)
 
 ### License 
-Copyright (c) 2017 Suyash Kumar
+Copyright (c) 2018 Suyash Kumar
 
 See [conduit/LICENSE.txt](https://github.com/suyashkumar/conduit/blob/master/LICENSE.txt) for license text (CC Attribution-NonCommercial 3.0)
