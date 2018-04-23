@@ -7,6 +7,10 @@ services:
     environment: 
       - POSTGRES_PASSWORD
       - DBConnString
+      - UseSSL
+      - CertKey
+      - PrivKey
+      - SigningKey
     command: ["./wait-for-it.sh", "db:5432", "--", "./conduit"] 
   db:
     image: postgres
