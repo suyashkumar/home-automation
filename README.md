@@ -7,7 +7,7 @@
 
 Conduit is an entirely open-source web service that allows you to quickly and easily call functions on your [ESP8266 IoT devices](https://www.amazon.com/HiLetgo-Version-NodeMCU-Internet-Development/dp/B010O1G1ES/ref=sr_1_3?ie=UTF8&qid=1483953570&sr=8-3&keywords=nodemcu+esp8266) from anywhere in the world (even if those devices are behind private networks). 
 
-You can do all this simply by dropping in a few lines of code into your firmware and then issuing RESTful API requests to the conduit web service to call your firmware functions. Skip ahead to a full minimal example if you're ready to get started right away!
+You can do all this simply by dropping in a few lines of code into your firmware and then issuing RESTful API requests to the conduit web service to call your firmware functions. Skip ahead to a [full minimal example](/#bink-an-led-from-the-cloud-full-example) if you're ready to get started right away!
 
 ## Conduit Components
 * [Conduit backend web service (here)](https://github.com/suyashkumar/conduit)
