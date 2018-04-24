@@ -25,7 +25,7 @@ A central conduit API server is already deployed at https://api.conduit.suyash.i
 
 
 ## Sample Application using Conduit
-[smart-lights](https://github.com/suyashkumar/smart-lights) is a sample project that uses this library to switch lights from the cloud. It currently uses V1 of this library and should be updated to V2 shortly. 
+[smart-lights](https://github.com/suyashkumar/smart-lights) is a sample project that uses v1 of this this library to switch lights from the cloud. It currently uses v1 of this library and should be updated to v2 shortly. 
 
 ![](https://github.com/suyashkumar/smart-lights/blob/master/img/lightswitch.gif)
 
@@ -33,7 +33,7 @@ A central conduit API server is already deployed at https://api.conduit.suyash.i
 Below is a minimal example of firmware code needed to get started with Conduit to blink an LED. See the next section for a complete example. 
 ```C
 #include <Arduino.h>
-#include <Conduit.h>
+#include <Conduit.h> // get from suyashkumar/conduit-firmware-library or platformio
 
 #define LED D0
 
@@ -68,15 +68,25 @@ void loop(void){
 }
 ```
 
-and now you can call `ledToggle` on that device from anywhere in the world with:
+and now you can call `ledToggle` on that device from anywhere in the world by using the following APIs:
 
-POST https://api.conduit.suyash.io/api/call:
+### Call RESTful APIs to trigger ESP8266 Functions: 
+1) Get your login token by authenticating
+POST https://api.conduit.suyash.io/api/login:
+   ```sh
+   curl 'https://api.conduit.suyash.io/api/login' \
+   -H 'content-type: application/json;charset=UTF-8'  \
+   --data-binary '{"email":"YOUR_EMAIL", "password":"YOUR_PASSWORD"}' --compressed
+    ```
 
-```sh
-curl 'https://api.conduit.suyash.io/api/call' \
--H 'content-type: application/json;charset=UTF-8'  \
---data-binary '{"token":"your_login_token","device_name":"suyash","function_name":"ledToggle","wait_for_device_response":true}' --compressed
- ```
+2) POST https://api.conduit.suyash.io/api/call:
+
+   ```sh
+   curl 'https://api.conduit.suyash.io/api/call' \
+   -H 'content-type: application/json;charset=UTF-8'  \
+   --data-binary '{"token":"YOUR_LOGIN_TOKEN","device_name":"YOUR_DEVICE_NAME","function_name":"ledToggle","wait_for_device_response":true}' --compressed
+    ```
+
 
 Conduit is currently in active development, so please feel free to contact me with comments/questions and submit pull requests!
 
@@ -96,12 +106,11 @@ Please make sure you've installed the relevant drivers ([here](https://www.silab
 4. Open `src/main.ino`. Fill in the following lines (account secret comes from step 2):
 
   ```C
-  // Fill out the below Github folks:
-const char* ssid = "";
-const char* password = "";
-const char* device_name = "myDevice";
-const char* server_url = "api.conduit.suyash.io";
-const char* account_secret = "";
+const char* ssid = ""; // wifi ssid
+const char* password = ""; // wifi password
+const char* device_name = ""; // you pick this! IDentifier for your device
+const char* server_url = "api.conduit.suyash.io"; // location of the API server
+const char* account_secret = ""; // register and call /api/user_info to get this
   ```
 5. Build the project using platformio. You should [install platformio](http://docs.platformio.org/en/latest/installation.html#python-package-manager) (if you haven't already) to build this properly. Ensure you're in the root directory of the example (not `src`) and run:
 
@@ -114,24 +123,8 @@ const char* account_secret = "";
   ```
   NOTE: to properly upload to an ESP8266 chip, you must have installed the [ESP8266 drivers](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx) on your system already.
 
-6. You should be set! You can now go to the conduit interact view (https://conduit.suyash.io/#/interact) and type in your device name (that you chose in step 4) and `ledToggle` as the function and hit "Execute!" to see your LED on your device toggle! You can also issue RESTful API requests to conduit to trigger functions on your device from any app that you build. To call `ledToggle`
+6. You should be set! You can now go to the conduit interact view (https://conduit.suyash.io/#/interact) and type in your device name (that you chose in step 4) and `ledToggle` as the function and hit "Execute!" to see your LED on your device toggle! You can also issue RESTful API requests to conduit to trigger functions on your device from any app that you build as mentioned [here]()
 
-### Call RESTful APIs to trigger ESP8266 Functions: 
-1) Get your login token by authenticating
-POST https://api.conduit.suyash.io/api/login:
-   ```sh
-   curl 'https://api.conduit.suyash.io/api/login' \
-   -H 'content-type: application/json;charset=UTF-8'  \
-   --data-binary '{"email":"YOUR_EMAIL", "password":"YOUR_PASSWORD"}' --compressed
-    ```
-
-2) POST https://api.conduit.suyash.io/api/call:
-
-   ```sh
-   curl 'https://api.conduit.suyash.io/api/call' \
-   -H 'content-type: application/json;charset=UTF-8'  \
-   --data-binary '{"token":"YOUR_LOGIN_TOKEN","device_name":"YOUR_DEVICE_NAME","function_name":"ledToggle","wait_for_device_response":true}' --compressed
-    ```
 
 ## License 
 Copyright (c) 2018 Suyash Kumar
