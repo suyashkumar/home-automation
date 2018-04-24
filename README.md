@@ -123,7 +123,7 @@ const char* account_secret = ""; // register and call /api/user_info to get this
   ```
   NOTE: to properly upload to an ESP8266 chip, you must have installed the [ESP8266 drivers](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx) on your system already.
 
-6. You should be set! You can now go to the conduit interact view (https://conduit.suyash.io/#/interact) and type in your device name (that you chose in step 4) and `ledToggle` as the function and hit "Execute!" to see your LED on your device toggle! You can also issue RESTful API requests to conduit to trigger functions on your device from any app that you build as mentioned [here]()
+6. You should be set! You can now go to the conduit interact view (https://conduit.suyash.io/#/interact) and type in your device name (that you chose in step 4) and `ledToggle` as the function and hit "Execute!" to see your LED on your device toggle! You can also issue RESTful API requests to conduit to trigger functions on your device from any app that you build as mentioned [here](README.md#call-restful-apis-to-trigger-esp8266-functions)
 
 
 ## License 
