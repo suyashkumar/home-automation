@@ -135,4 +135,4 @@ const char* account_secret = ""; // register and call /api/user_info to get this
 ## License 
 Copyright (c) 2018 Suyash Kumar
 
-See [conduit/LICENSE.txt](https://github.com/suyashkumar/conduit/blob/master/LICENSE.txt) for license text (CC Attribution-NonCommercial 3.0)
+See [conduit/LICENSE](https://github.com/suyashkumar/conduit/blob/master/LICENSE) for license text (MIT).
